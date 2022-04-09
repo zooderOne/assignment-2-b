@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<pthread.h>
+
+int arr[99999999];
+struct in{
+ int size;
+ char *ip_file;
+};
+void* read_arr_from_file(void *par) {
+	FILE *fp;
+	struct in *n=(struct in*)par;
+	int i,len=n->size;
+	
+	fp = fopen(n->ip_file, "r");
+	for (i=0; i<len; i++) 
+		fscanf(fp, "%d", &arr[i]);
+			
+	for(int j=0;j<len;j++)
+		printf("%d\n",arr[j]);
+		
+		pthread_exit(NULL);
+	}
+
+
+int main(int argc, char *argv[])
+{
+        pthread_t pid;
+	int size=atoi(argv[2]);
+	int arr[size];
+	struct in par;
+	par.size=atoi(argv[2]);
+	par.ip_file=argv[1];
+	
+	pthread_create(&pid,NULL,read_arr_from_file,(void*)&par);
+	//read_arr_from_file(size,argv[1],arr);
+	pthread_join(pid,NULL);
+			
+}
+
+//CODE FOR MULTITHREDS
+/*
+struct ft 
+{
+    char* file_name;
+    int start_index;
+    int end_index;
+};
+
+
+void *thread(void *arg) {
+    int i;
+    int c;
+    struct ft* fi = (struct ft*)arg;
+    FILE* file = fopen(fi->file_name);
+    fseek (file , fi->start_index, SEEK_SET);
+    for(i = 0; i < fi->end_index - fi->start_index; i++)
+    {
+        c = getc(file);
+    }
+} */
+
+
